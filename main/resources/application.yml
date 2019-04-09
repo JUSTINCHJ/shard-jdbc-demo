@@ -1,0 +1,14 @@
+server:
+  port: 9900
+spring:
+  application:
+    name: shard-jdbc
+#mybatis:
+#  dao-locations: classpath:mybatis/dao/*.xml
+#  type-aliases-package: com.sun.shard.bean
+
+#配置minidao的配置参数
+minidao:
+  base-package: com.sun.shard.dao,com.sun.shard.sql
+  db-type: mysql
+  show-sql: true

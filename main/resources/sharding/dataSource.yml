@@ -1,0 +1,42 @@
+dataSources:
+  ds0: !!com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/order1
+    username: root
+    password:
+  ds1: !!com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/order2
+    username: root
+    password:
+shardingRule:  
+  tables:
+    t_user: #t_user表
+      actualDataNodes: ds${0..1}.t_user${0..1} #数据节点
+      databaseStrategy: #分库策略
+        inline:
+          shardingColumn: city_id
+          algorithmExpression: ds${city_id % 2}
+      tableStrategy: 
+        inline:
+          shardingColumn: sex
+          algorithmExpression: t_user${sex % 2}
+      keyGeneratorColumnName: id #主键
+    t_address: #t_a表dress标
+      actualDataNodes: ds${0..1}.t_address
+      databaseStrategy: #分库策略
+        inline:
+          shardingColumn: lit #拆分字段
+          algorithmExpression: ds${lit % 2}
+      keyGeneratorColumnName: id #主键
+  bindingTables: #绑定两个表关系 避免笛卡尔积
+    - t_user,t_address
+  defaultDataSourceName: ds0 #默认数据源
+  defaultDatabaseStrategy:
+    inline:
+      shardingColumn: id
+      algorithmExpression: ds${id % 2}
+  defaultTableStrategy:
+    none:
+  props:
+    sql.show: true
